@@ -8,6 +8,7 @@
 script = ExtResource("1_tr2wf")
 speed = null
 bullet_direction = null
+radius = 10.0
 
 [node name="BulletCollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_fgd0j")

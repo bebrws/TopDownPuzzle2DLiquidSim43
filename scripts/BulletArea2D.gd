@@ -4,9 +4,10 @@ extends Area2D
 @export var speed: float = 1000.0
 @export var bullet_direction: Vector2 = Vector2(0.0,0.0)
 
-@export var radius: float = 10:
+@export var radius: float = 4.0:
 	set(r):
-		$BulletCollisionShape2D.shape.radius = r
+		if $BulletCollisionShape2D:
+			$BulletCollisionShape2D.shape.radius = r
 
 
 func _physics_process(delta):
@@ -18,6 +19,7 @@ func _draw() -> void:
 	
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	$BulletCollisionShape2D.shape.radius = self.radius
 	pass # Replace with function body.
 
 

@@ -7,6 +7,7 @@ var bullet_scene: PackedScene = preload("res://scenes/bullet.tscn")
 @onready var centerNode: Node2D = $CenterNode2D
 
 var original_position: Vector2 = Vector2.ZERO
+var start_global_position: Vector2 = Vector2.ZERO
 
 const SPEED = 100.0
 const JUMP_VELOCITY = -400.0
@@ -41,6 +42,8 @@ func _unhandled_input(event):
 func _touch_began(event_position: Vector2):
 	touch_started = true
 	touch_start_position = event_position
+	start_global_position = self.global_position
+	print("touch_start_position ", touch_start_position, "    global pos  ", self.global_position)
 	
 	if is_on_floor():
 		var direction = 1
@@ -73,11 +76,13 @@ func _handle_double_tap(event_position: Vector2):
 		velocity.x += velxadd
 
 func _handle_long_press(event_position: Vector2):
-	var dir = touch_start_position.direction_to(event_position)
+	#var dir = touch_start_position.direction_to(event_position)
+	var dir = start_global_position.direction_to(get_global_mouse_position())
 	print("Long Press at ", event_position, " dir ", dir)
 	var b = bullet_scene.instantiate()
 	b.bullet_direction = dir
-	b.position = self.global_position
+	#b.position = self.global_position
+	b.position = start_global_position
 	get_tree().root.add_child(b)
 
 	
