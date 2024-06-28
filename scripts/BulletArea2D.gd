@@ -32,7 +32,7 @@ func _on_body_entered(body: Node2D) -> void:
 	if not ("miner" in body.get_groups()):
 		print("Bullet hit ", body)
 		if body is TileMap:
-			var tilemap
+			var tilemap: TileMap
 			var collision_point = self.global_position
 			for c in get_tree().get_current_scene().get_children():
 				if c is TileMap:
@@ -42,6 +42,7 @@ func _on_body_entered(body: Node2D) -> void:
 			
 			if tile_data:
 				print("Hit tile at: ", tile_pos)
+				tilemap.set_cell(0, tile_pos, 1, Vector2i(1,0), 2)
 		queue_free()
 			
 	pass # Replace with function body.
