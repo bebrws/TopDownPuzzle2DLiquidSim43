@@ -1,5 +1,6 @@
 extends CharacterBody2D
 
+var bullet_scene: PackedScene = preload("res://scenes/bullet.tscn")
 
 @onready var sprite: AnimatedSprite2D = $MinerAnimatedSprite2D
 @onready var gunNode: Node2D = $GunNode2D
@@ -7,20 +8,92 @@ extends CharacterBody2D
 
 var original_position: Vector2 = Vector2.ZERO
 
-const SPEED = 300.0
+const SPEED = 100.0
 const JUMP_VELOCITY = -400.0
 
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var gravity: int = ProjectSettings.get_setting("physics/2d/default_gravity")
 
+
+
+# FOR TOUCH SIM
+var touch_start_position: Vector2
+#var is_touching: bool = false
+var is_long_pressing: bool = false
+var in_air: bool = false
+var touch_started: bool = false
+
+# Thresholds
+const TAP_DRAG_THRESHOLD: float = 20.0
+
+
+func _unhandled_input(event):
+	if event is InputEventMouseButton:
+		if event.button_index == MOUSE_BUTTON_LEFT:
+			if event.is_double_click():
+				_handle_double_tap(event.position)
+			elif event.is_pressed():
+				_touch_began(event.position)
+			else:
+				_touch_ended(event.position)
+				
+
+func _touch_began(event_position: Vector2):
+	touch_started = true
+	touch_start_position = event_position
+	
+	if is_on_floor():
+		var direction = 1
+		var touch_direction = get_global_mouse_position().direction_to(self.global_position)
+		if touch_direction.x < 0:
+			direction *= 1
+		else:
+			direction *= -1
+		velocity.x = direction * SPEED
+
+func _touch_ended(event_position: Vector2):
+	if touch_started == true:
+		velocity.x = 0 # move_toward(velocity.x, 0, SPEED)
+	touch_started = false
+	var dist = touch_start_position.distance_to(event_position)
+	if dist > TAP_DRAG_THRESHOLD:
+		print("long press dist ", dist)
+		_handle_long_press(event_position)
+			
+func _handle_double_tap(event_position: Vector2):
+	print("Double Tap at ", event_position)
+	var velxadd = (get_global_mouse_position().x - self.global_position.x) * 4
+	if velxadd > 400.0:
+		velxadd = 400.0
+	if velxadd < -400.0:
+		velxadd = -400.0
+	print("velxadd ",  velxadd)
+	if is_on_floor():
+		velocity.y = JUMP_VELOCITY
+		velocity.x += velxadd
+
+func _handle_long_press(event_position: Vector2):
+	var dir = touch_start_position.direction_to(event_position)
+	print("Long Press at ", event_position, " dir ", dir)
+	var b = bullet_scene.instantiate()
+	b.bullet_direction = dir
+	b.position = self.global_position
+	get_tree().root.add_child(b)
+
+	
 func _ready() -> void:
 	sprite.play("standing")
 	original_position = sprite.position
-
+	
 func _physics_process(delta: float) -> void:
 	# Add the gravity.
 	if not is_on_floor():
 		velocity.y += gravity * delta
+		in_air = true
+	else:
+		if in_air:
+			velocity.x = 0 # move_toward(velocity.x, 0, SPEED)
+		in_air = false
 		
 	if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
 		var mp = get_global_mouse_position()
@@ -34,27 +107,6 @@ func _physics_process(delta: float) -> void:
 			sprite.flip_h = true
 		else:
 			sprite.flip_h = false
-			
 
-	# Handle jump.
-	#if Input.is_action_just_pressed("ui_accept") and is_on_floor():
-		#velocity.y = JUMP_VELOCITY
-#
-	#if Input.is_action_just_pressed("ui_left"):
-		#sprite.flip_h = true
-		#sprite.position.x = original_position.x - 12
-		#
-	#if Input.is_action_just_pressed("ui_right"):
-		#sprite.flip_h = false
-		#sprite.position.x = original_position.x
-	## Get the input direction and handle the movement/deceleration.
-	## As good practice, you should replace UI actions with custom gameplay actions.
-	#var direction := Input.get_axis("ui_left", "ui_right")
-	#if direction:
-		##if sprite.animation != "walking":
-		#sprite.play("walking")
-		#velocity.x = direction * SPEED
-	#else:
-		#velocity.x = move_toward(velocity.x, 0, SPEED)
-
+	var direction = 1
 	move_and_slide()
