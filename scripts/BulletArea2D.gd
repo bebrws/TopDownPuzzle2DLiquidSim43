@@ -13,7 +13,7 @@ extends Area2D
 func _physics_process(delta):
 	position +=  bullet_direction * speed * delta
 	
-	
+
 func _draw() -> void:
 	draw_circle(Vector2.ZERO, self.radius, Color.BLACK)
 	
@@ -31,4 +31,17 @@ func _process(delta: float) -> void:
 func _on_body_entered(body: Node2D) -> void:
 	if not ("miner" in body.get_groups()):
 		print("Bullet hit ", body)
+		if body is TileMap:
+			var tilemap
+			var collision_point = self.global_position
+			for c in get_tree().get_current_scene().get_children():
+				if c is TileMap:
+					tilemap = c
+			var tile_pos = tilemap.local_to_map(tilemap.to_local(collision_point))
+			var tile_data = tilemap.get_cell_tile_data(0, tile_pos)
+			
+			if tile_data:
+				print("Hit tile at: ", tile_pos)
+		queue_free()
+			
 	pass # Replace with function body.
