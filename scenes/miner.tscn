@@ -111,7 +111,7 @@ animations = [{
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_lorsy"]
 size = Vector2(20, 21)
 
-[node name="MinerCharacterBody2D" type="CharacterBody2D"]
+[node name="MinerCharacterBody2D" type="CharacterBody2D" groups=["miner"]]
 script = ExtResource("1_81ne7")
 
 [node name="MinerAnimatedSprite2D" type="AnimatedSprite2D" parent="."]

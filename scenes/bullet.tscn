@@ -11,3 +11,5 @@ bullet_direction = null
 
 [node name="BulletCollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_fgd0j")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
