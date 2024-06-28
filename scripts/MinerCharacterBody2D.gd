@@ -63,10 +63,10 @@ func _touch_ended(event_position: Vector2):
 func _handle_double_tap(event_position: Vector2):
 	print("Double Tap at ", event_position)
 	var velxadd = (get_global_mouse_position().x - self.global_position.x) * 4
-	if velxadd > 400.0:
-		velxadd = 400.0
-	if velxadd < -400.0:
-		velxadd = -400.0
+	if velxadd > 100.0:
+		velxadd = 100.0
+	if velxadd < -100.0:
+		velxadd = -100.0
 	print("velxadd ",  velxadd)
 	if is_on_floor():
 		velocity.y = JUMP_VELOCITY
