@@ -1,6 +1,6 @@
 [gd_scene load_steps=10 format=3 uid="uid://n2onogbvk7it"]
 
-[ext_resource type="Script" path="res://scripts/MinerCharacterBody2D.gd" id="1_81ne7"]
+[ext_resource type="Script" path="res://scripts/JennyCharacterBody2D.gd" id="1_133wn"]
 [ext_resource type="Texture2D" uid="uid://bbvb7m0v8mijw" path="res://sprites/characters/jenny1/JennySpriteSheet.png" id="2_gj4q5"]
 [ext_resource type="Texture2D" uid="uid://doe6cbgqqjk6v" path="res://icon.svg" id="3_onljp"]
 
@@ -44,7 +44,7 @@ animations = [{
 size = Vector2(20, 21)
 
 [node name="JennyCharacterBody2D" type="CharacterBody2D" groups=["miner"]]
-script = ExtResource("1_81ne7")
+script = ExtResource("1_133wn")
 
 [node name="JennyAnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 light_mask = 513
@@ -61,9 +61,11 @@ scale = Vector2(1.06461, 1.03136)
 shape = SubResource("RectangleShape2D_lorsy")
 
 [node name="GunNode2D" type="Node2D" parent="."]
+visible = false
 position = Vector2(10, -12)
 
 [node name="GunSprite2D" type="Sprite2D" parent="GunNode2D"]
+visible = false
 position = Vector2(13, 0)
 scale = Vector2(0.2, 0.02)
 texture = ExtResource("3_onljp")
