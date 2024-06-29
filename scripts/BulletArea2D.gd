@@ -44,10 +44,10 @@ func _on_body_entered(body: Node2D) -> void:
 				var tile_pos = tilemap.local_to_map(tilemap.to_local(collision_point))
 				var ac = tilemap.get_cell_atlas_coords(0, tile_pos)
 				var at = tilemap.get_cell_alternative_tile(0, tile_pos)
-				if ac == Vector2i(1,0) and at == 2:
+				if ac in GameManager.EMPTY_CELLS:
 					collision_point += bullet_direction * 5.0
 				else:
-					tilemap.set_cell(0, tile_pos, 1, Vector2i(1,0), 2)
+					tilemap.set_cell(0, tile_pos, 1, GameManager.DEFAULT_EMPTY_CELL)
 					hit = true
 				#var tile_data: TileData = tilemap.get_cell_tile_data(0, tile_pos)
 				#if tile_data:
