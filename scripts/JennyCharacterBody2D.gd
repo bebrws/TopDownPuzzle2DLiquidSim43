@@ -26,6 +26,7 @@ var touch_start_dist: float = 0.0
 var is_long_pressing: bool = false
 var in_air: bool = false
 var touch_started: bool = false
+var started_in_character: bool = false
 
 # Thresholds
 const TAP_DRAG_THRESHOLD: float = 80.0
@@ -47,14 +48,24 @@ func _unhandled_input(event):
 
 func _touch_began(event_position: Vector2):
 	#print("BEB tocuh ", event_position, " vp ", get_viewport().get_mouse_position()
-	touch_started = true
+	
+	
 	touch_start_position = event_position
 	touch_start_dist = touch_start_position.distance_to(get_global_mouse_position())
 	start_global_position = self.global_position
 	touch_start_vp_point =  get_viewport().get_mouse_position()
-	#print("touch_start_position ", touch_start_position, "    global pos  ", self.global_position)
 	
-	if is_on_floor():
+	touch_started = true
+	#print("x ", abs(get_global_mouse_position().x - centerNode.global_position.x) < 10)
+	#print("y ", abs(get_global_mouse_position().y - centerNode.global_position.y) < 15)
+	
+	#print("touch_start_vp_point.y ", touch_start_vp_point.y, "  self.global_position.y ", self.global_position.y)
+	#print("cn.y  ", centerNode.global_position.y)
+	#print("get_global_mouse_position().y  ", get_global_mouse_position().y)
+	if abs(get_global_mouse_position().x - centerNode.global_position.x) < 10 and abs(get_global_mouse_position().y - centerNode.global_position.y) < 15:
+		started_in_character = true
+	
+	if not started_in_character and is_on_floor():
 		var touch_direction = get_global_mouse_position().direction_to(self.global_position)
 		if touch_direction.x < 0:
 			direction = 1
@@ -67,11 +78,14 @@ func _touch_ended(event_position: Vector2):
 	if touch_started == true:
 		velocity.x = 0 # move_toward(velocity.x, 0, SPEED)
 		direction = 0
+		
 	touch_started = false
 	var dist = touch_start_position.distance_to(event_position)
 	if dist > TAP_DRAG_THRESHOLD:
 		print("long press dist ", dist)
 		_handle_long_press(event_position)
+	
+	started_in_character = false
 			
 func _handle_double_tap(event_position: Vector2):
 	print("Double Tap at ", event_position, " vp ", get_viewport().get_mouse_position(), " self ", self.global_position)
@@ -88,14 +102,14 @@ func _handle_double_tap(event_position: Vector2):
 		velocity.x = velxadd
 
 func _handle_long_press(event_position: Vector2):
-	#var dir = touch_start_position.direction_to(event_position)
-	var dir = start_global_position.direction_to(get_global_mouse_position())
-	print("Long Press at ", event_position, " dir ", dir)
-	var b = bullet_scene.instantiate()
-	b.bullet_direction = dir
-	#b.position = self.global_position
-	b.position = centerNode.global_position
-	get_tree().root.add_child(b)
+	if started_in_character:
+		var dir = start_global_position.direction_to(get_global_mouse_position())
+		print("Long Press at ", event_position, " dir ", dir)
+		var b = bullet_scene.instantiate()
+		b.bullet_direction = dir
+		#b.position = self.global_position
+		b.position = centerNode.global_position
+		get_tree().root.add_child(b)
 
 func _ready() -> void:
 	sprite.play("standing")

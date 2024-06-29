@@ -71,4 +71,4 @@ scale = Vector2(0.2, 0.02)
 texture = ExtResource("3_onljp")
 
 [node name="CenterNode2D" type="Node2D" parent="."]
-position = Vector2(0, -9)
+position = Vector2(0, -11)
