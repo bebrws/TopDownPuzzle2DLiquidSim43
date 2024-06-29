@@ -6,6 +6,8 @@ const EMPTY_CELLS = [
 	Vector2i(5,15)
 ]
 
+const DEFAULT_WATER_CELL = Vector2i(4,10)
+
 const WATER_CELLS = [
 	Vector2i(4,9),
 	Vector2i(4,10),

@@ -3,12 +3,10 @@
 [ext_resource type="Script" path="res://scripts/BulletArea2D.gd" id="1_tr2wf"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_fgd0j"]
+radius = 4.0
 
 [node name="BulletArea2D" type="Area2D"]
 script = ExtResource("1_tr2wf")
-speed = null
-bullet_direction = null
-radius = 10.0
 
 [node name="BulletCollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_fgd0j")
