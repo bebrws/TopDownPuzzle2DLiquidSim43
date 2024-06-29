@@ -22,17 +22,21 @@ func _ready() -> void:
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	var new_water_tiles = []
+	var water_flow_dirs = [TileSet.CELL_NEIGHBOR_BOTTOM_SIDE, TileSet.CELL_NEIGHBOR_BOTTOM_LEFT_SIDE, TileSet.CELL_NEIGHBOR_BOTTOM_RIGHT_SIDE]
 	for water_tile_coord in water_tiles:
-		var atlas_water_for_current_coords = self.get_cell_atlas_coords(0, water_tile_coord)
-		var tilemap_below_coords = self.get_neighbor_cell(water_tile_coord, TileSet.CELL_NEIGHBOR_BOTTOM_SIDE)
-		var atlas_below_water_coords = self.get_cell_atlas_coords(0, tilemap_below_coords)
-		#print("atlas_below_water_coords ", atlas_below_water_coords)
-		if atlas_below_water_coords in GameManager.EMPTY_CELLS:
-			#print("BEB tilemap_below_coords", tilemap_below_coords, "has empty cell")
-			new_water_tiles.push_back(tilemap_below_coords)
-			self.set_cell(0, tilemap_below_coords, 1, GameManager.DEFAULT_WATER_CELL)
-			self.set_cell(0, water_tile_coord, 1, GameManager.DEFAULT_EMPTY_CELL)
-		else:
+		var water_moved = false
+		for flow_dir in water_flow_dirs:
+			#var atlas_water_for_current_coords = self.get_cell_atlas_coords(0, water_tile_coord)
+			var tilemap_below_coords = self.get_neighbor_cell(water_tile_coord, flow_dir)
+			var atlas_below_water_coords = self.get_cell_atlas_coords(0, tilemap_below_coords)
+			#print("atlas_below_water_coords ", atlas_below_water_coords)
+			if atlas_below_water_coords in GameManager.EMPTY_CELLS:
+				#print("BEB tilemap_below_coords", tilemap_below_coords, "has empty cell")
+				new_water_tiles.push_back(tilemap_below_coords)
+				self.set_cell(0, tilemap_below_coords, 1, GameManager.DEFAULT_WATER_CELL)
+				self.set_cell(0, water_tile_coord, 1, GameManager.DEFAULT_EMPTY_CELL)
+				water_moved = true
+		if not water_moved:
 			new_water_tiles.push_back(water_tile_coord)
 	water_tiles = new_water_tiles
 	pass
