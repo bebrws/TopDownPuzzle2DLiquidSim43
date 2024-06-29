@@ -79,5 +79,51 @@ func _process(delta: float) -> void:
 				#new_water_tiles_hor.push_back(water_tile_coord)
 		water_tiles = new_water_tiles_hor #.duplicate()
 		
-	#print("new_water_tiles  ", new_water_tiles)
-	pass
+
+
+
+func _process_will_stop(delta: float) -> void:
+	delta_sum += delta
+	var fell_vertically = false
+	if delta_sum > 0.05:
+		delta_sum = 0.0
+		var new_water_tiles_vert = []
+		#var water_flow_dirs = [TileSet.CELL_NEIGHBOR_BOTTOM_SIDE, TileSet.CELL_NEIGHBOR_BOTTOM_LEFT_SIDE, TileSet.CELL_NEIGHBOR_BOTTOM_RIGHT_SIDE]
+		for water_tile_coord in water_tiles:
+			var tilemap_below_coords = self.get_neighbor_cell(water_tile_coord, TileSet.CELL_NEIGHBOR_BOTTOM_SIDE)
+			var atlas_below_water_coords = self.get_cell_atlas_coords(0, tilemap_below_coords)
+			#print("water_tile_coords sides ", tilemap_below_coords)
+			if atlas_below_water_coords in GameManager.EMPTY_CELLS:
+				#print("FINDING EMPOTY")
+				#print("BEB tilemap_below_coords", tilemap_below_coords, "has empty cell")
+				new_water_tiles_vert.push_back(tilemap_below_coords)
+				self.set_cell(0, tilemap_below_coords, 1, GameManager.DEFAULT_WATER_CELL)
+				self.set_cell(0, water_tile_coord, 1, GameManager.DEFAULT_EMPTY_CELL)
+				fell_vertically = true
+			else:
+				new_water_tiles_vert.push_back(water_tile_coord)
+
+		var new_water_tiles_hor = []
+
+		if fell_vertically:		
+			var water_flow_dirs = [TileSet.CELL_NEIGHBOR_LEFT_SIDE, TileSet.CELL_NEIGHBOR_RIGHT_SIDE]
+			
+			var water_dir_index = randi() % len(water_flow_dirs)
+			
+			for water_tile_coord in new_water_tiles_vert:
+				var tilemap_below_coords = self.get_neighbor_cell(water_tile_coord, water_flow_dirs[water_dir_index])
+				var atlas_below_water_coords = self.get_cell_atlas_coords(0, tilemap_below_coords)
+				#print("water_tile_coords sides ", tilemap_below_coords)
+				if atlas_below_water_coords in GameManager.EMPTY_CELLS:
+					#print("FINDING EMPOTY")
+					#print("BEB tilemap_below_coords", tilemap_below_coords, "has empty cell")
+					new_water_tiles_hor.push_back(tilemap_below_coords)
+					self.set_cell(0, tilemap_below_coords, 1, GameManager.DEFAULT_WATER_CELL)
+					self.set_cell(0, water_tile_coord, 1, GameManager.DEFAULT_EMPTY_CELL)
+				else:
+					new_water_tiles_hor.push_back(water_tile_coord)
+		if fell_vertically:
+			water_tiles = new_water_tiles_hor
+		else:
+			water_tiles = new_water_tiles_vert
+
