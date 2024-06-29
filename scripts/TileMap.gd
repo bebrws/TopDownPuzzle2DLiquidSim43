@@ -24,7 +24,7 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	delta_sum += delta
 	
-	if delta_sum > 1.0:
+	if delta_sum > 0.05:
 		delta_sum = 0.0
 		var new_water_tiles_vert = []
 		#var water_flow_dirs = [TileSet.CELL_NEIGHBOR_BOTTOM_SIDE, TileSet.CELL_NEIGHBOR_BOTTOM_LEFT_SIDE, TileSet.CELL_NEIGHBOR_BOTTOM_RIGHT_SIDE]
@@ -48,7 +48,7 @@ func _process(delta: float) -> void:
 		var water_dir_index = randi() % len(water_flow_dirs)
 		
 		for water_tile_coord in new_water_tiles_vert:
-			var tilemap_below_coords = self.get_neighbor_cell(water_tile_coord, water_dir_index)
+			var tilemap_below_coords = self.get_neighbor_cell(water_tile_coord, water_flow_dirs[water_dir_index])
 			var atlas_below_water_coords = self.get_cell_atlas_coords(0, tilemap_below_coords)
 			#print("water_tile_coords sides ", tilemap_below_coords)
 			if atlas_below_water_coords in GameManager.EMPTY_CELLS:
