@@ -52,6 +52,9 @@ func _on_body_entered(body: Node2D) -> void:
 			else:
 				#tilemap.set_cell(tile_pos, 1, GameManager.DEFAULT_EMPTY_CELL)
 				tilemap.erase_cell(tile_pos)
+				var ls = get_tree().root.get_node_or_null("/root/Root/LiquidServer")
+				ls.start()
+				ls.update_simulation()
 					
 				#var tile_data: TileData = tilemap.get_cell_tile_data(0, tile_pos)
 				#if tile_data:

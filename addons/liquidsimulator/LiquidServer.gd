@@ -153,6 +153,10 @@ func _process(delta):
 			stop();
 		_time_passed = 0;
 		#print(_total_amount);
+		
+func update_simulation():
+	_update_simulation()
+	
 func _update_simulation():
 	var new_cells : Array[Liquid] = [];
 

@@ -95,32 +95,44 @@ func _touch_ended(event_position: Vector2):
 func _handle_double_tap(event_position: Vector2):
 	print("Double Tap at ", event_position, " vp ", get_viewport().get_mouse_position(), " self ", self.global_position)
 	if tap_in_jenny():
-		var box: Area2D = get_tree().root.get_node("/root/Box")
+		var box: Area2D = get_tree().root.get_node_or_null("/root/Box")
 		if box:
-			self.global_position.y -= 20.0
-			var below_tile_point = box.global_position + Vector2(0.0, 30.0)
-			var below_tile_pos = tilemap.local_to_map(tilemap.to_local(below_tile_point))
-			var below_below_tile_point = box.global_position + Vector2(0.0, 30.0)
-			var below_below_tile_pos = tilemap.local_to_map(tilemap.to_local(below_below_tile_point))
-			var bbac = tilemap.get_cell_atlas_coords(below_below_tile_pos)
-			print("box at tile_pos ", below_tile_pos, " bbac ", bbac)
-			if bbac == Vector2i(-1,-1):
-				below_tile_point = box.global_position + Vector2(16.0, 30.0)
+			var mult = (int(self.global_position.x)/16) * 16
+			var bmod = int(self.global_position.x) % 16
+			var bdif = self.global_position.x - mult
+			print("gp ", self.global_position)
+			print("modulo is ", bmod, " bdif ", bdif)
+			var below_tile_point
+			var below_tile_pos
+			var below_below_tile_point
+			var below_below_tile_pos
+			var bbac
+			
+			below_tile_point = box.global_position + Vector2(0.0, 16.0)
+			below_tile_pos = tilemap.local_to_map(tilemap.to_local(below_tile_point))
+			below_below_tile_point = box.global_position + Vector2(0.0, 32.0)
+			below_below_tile_pos = tilemap.local_to_map(tilemap.to_local(below_below_tile_point))
+			bbac = tilemap.get_cell_atlas_coords(below_below_tile_pos)
+			print("box at tile_pos ", below_below_tile_pos, " bbac ", bbac)
+			if bbac == Vector2i(-1, -1):
+				below_tile_point = box.global_position + Vector2(16.0, 16.0)
 				below_tile_pos = tilemap.local_to_map(tilemap.to_local(below_tile_point))
-				below_below_tile_point = box.global_position + Vector2(16.0, 46.0)
+				below_below_tile_point = box.global_position + Vector2(8.0, 32.0)
 				below_below_tile_pos = tilemap.local_to_map(tilemap.to_local(below_below_tile_point))
 				bbac = tilemap.get_cell_atlas_coords(below_below_tile_pos)
-			if bbac == Vector2i(-1,-1):
-				below_tile_point = box.global_position + Vector2(-16.0, 30.0)
+			if bbac == Vector2i(-1, -1):
+				below_tile_point = box.global_position + Vector2(-16.0, 16.0)
 				below_tile_pos = tilemap.local_to_map(tilemap.to_local(below_tile_point))
-				below_below_tile_point = box.global_position + Vector2(-16.0, 46.0)
+				below_below_tile_point = box.global_position + Vector2(-8.0, 32.0)
 				below_below_tile_pos = tilemap.local_to_map(tilemap.to_local(below_below_tile_point))
-				bbac = tilemap.get_cell_atlas_coords(below_below_tile_pos)				
-			tilemap.set_cell(below_tile_pos, 0, Vector2i(7,3))
-			box.queue_free()
+				bbac = tilemap.get_cell_atlas_coords(below_below_tile_pos)
+			if bbac != Vector2i(-1, -1):
+				tilemap.set_cell(below_tile_pos, 0, Vector2i(7,3))
+				self.global_position.y -= 20.0
+				box.queue_free()
 		else:
 			print("double tap in jenny")
-			var collision_point = self.global_position
+			var collision_point = self.global_position + Vector2(0.0, 16.0)
 			print("self.global_position ", self.global_position, "  collision_point ", collision_point)
 
 			var tile_pos = tilemap.local_to_map(tilemap.to_local(collision_point))
@@ -166,13 +178,13 @@ func _ready() -> void:
 	sprite.play("standing")
 	original_position = sprite.position
 	
-	tilemap = get_tree().get_current_scene().get_node("/root/Root/PropsTileMapLayer")
+	tilemap = get_tree().get_current_scene().get_node_or_null("/root/Root/PropsTileMapLayer")
 	
 func _physics_process(delta: float) -> void:
 	#print(get_tree().root.get_children())
-	var box: Area2D = get_tree().root.get_node("/root/Box")
+	var box: Area2D = get_tree().root.get_node_or_null("/root/Box")
 	if box:
-		box.global_position = self.global_position - Vector2(0.0, 35.0)
+		box.global_position = self.global_position - Vector2(0.0, 16.0)
 		#box.velocity = self.velocity
 	#print("m ", get_viewport().get_mouse_position(), "   gm  ", get_global_mouse_position())
 	
