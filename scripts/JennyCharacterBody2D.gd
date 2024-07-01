@@ -21,9 +21,7 @@ var gravity: int = ProjectSettings.get_setting("physics/2d/default_gravity")
 var tilemap: TileMapLayer
 
 # FOR TOUCH SIM
-var touch_start_vp_point: Vector2
 var touch_start_position: Vector2
-var touch_start_dist: float = 0.0
 
 #var is_touching: bool = false
 var is_long_pressing: bool = false
@@ -32,41 +30,35 @@ var touch_started: bool = false
 var started_in_character: bool = false
 
 # Thresholds
-const TAP_DRAG_THRESHOLD: float = 80.0
+const TAP_DRAG_THRESHOLD: float = 40.0
 
 var direction = 0
 
 
 func _unhandled_input(event):
-	get_viewport().set_input_as_handled()
-	if event is InputEventMouseButton:
-		if event.button_index == MOUSE_BUTTON_LEFT:
-			if event.is_double_click():
-				_handle_double_tap(event.position)
-			elif event.is_pressed():
-				_touch_began(event.position)
-			else:
-				_touch_ended(event.position)
-				
+	if not Input.is_action_pressed("star_control"):
+		if event is InputEventMouseButton:
+			if event.button_index == MOUSE_BUTTON_LEFT:
+				if event.is_double_click():
+					_handle_double_tap()
+				elif event.is_pressed():
+					_touch_began()
+				else:
+					_touch_ended()
+	elif touch_started and Input.is_action_pressed("star_control"):
+		_touch_ended()
+		
 func tap_in_jenny():
+	#print("tapjenny x ", abs(get_global_mouse_position().x - centerNode.global_position.x))
+	#print("tapjenny y ", abs(get_global_mouse_position().y - centerNode.global_position.y))
 	return abs(get_global_mouse_position().x - centerNode.global_position.x) < 10 and abs(get_global_mouse_position().y - centerNode.global_position.y) < 15	
 	
-func _touch_began(event_position: Vector2):
-	#print("BEB tocuh ", event_position, " vp ", get_viewport().get_mouse_position()
-	
-	
-	touch_start_position = event_position
-	touch_start_dist = touch_start_position.distance_to(get_global_mouse_position())
+func _touch_began():
+	touch_start_position = get_global_mouse_position()
 	start_global_position = self.global_position
-	touch_start_vp_point =  get_viewport().get_mouse_position()
 	
 	touch_started = true
-	#print("x ", abs(get_global_mouse_position().x - centerNode.global_position.x) < 10)
-	#print("y ", abs(get_global_mouse_position().y - centerNode.global_position.y) < 15)
-	
-	#print("touch_start_vp_point.y ", touch_start_vp_point.y, "  self.global_position.y ", self.global_position.y)
-	#print("cn.y  ", centerNode.global_position.y)
-	#print("get_global_mouse_position().y  ", get_global_mouse_position().y)
+
 	if tap_in_jenny():
 		started_in_character = true
 	
@@ -79,21 +71,21 @@ func _touch_began(event_position: Vector2):
 		velocity.x = direction * SPEED
 	
 
-func _touch_ended(event_position: Vector2):
+func _touch_ended():
 	if touch_started == true:
 		velocity.x = 0 # move_toward(velocity.x, 0, SPEED)
 		direction = 0
 		
 	touch_started = false
-	var dist = touch_start_position.distance_to(event_position)
+	var dist = touch_start_position.distance_to(get_global_mouse_position())
 	if dist > TAP_DRAG_THRESHOLD:
 		print("long press dist ", dist)
-		_handle_long_press(event_position)
+		_handle_long_press()
 	
 	started_in_character = false
 			
-func _handle_double_tap(event_position: Vector2):
-	print("Double Tap at ", event_position, " vp ", get_viewport().get_mouse_position(), " self ", self.global_position)
+func _handle_double_tap():
+	print("Double Tap at ", get_global_mouse_position(), " self ", self.global_position)
 	if tap_in_jenny():
 		var box: Area2D = get_tree().root.get_node_or_null("/root/Box")
 		if box:
@@ -164,10 +156,9 @@ func _handle_double_tap(event_position: Vector2):
 			velocity.y = JUMP_VELOCITY
 			velocity.x = velxadd
 
-func _handle_long_press(event_position: Vector2):
+func _handle_long_press():
 	if started_in_character:
 		var dir = start_global_position.direction_to(get_global_mouse_position())
-		print("Long Press at ", event_position, " dir ", dir)
 		var b = bullet_scene.instantiate()
 		b.bullet_direction = dir
 		#b.position = self.global_position
@@ -185,18 +176,7 @@ func _physics_process(delta: float) -> void:
 	var box: Area2D = get_tree().root.get_node_or_null("/root/Box")
 	if box:
 		box.global_position = self.global_position - Vector2(0.0, 16.0)
-		#box.velocity = self.velocity
-	#print("m ", get_viewport().get_mouse_position(), "   gm  ", get_global_mouse_position())
-	
-	
-	#if touch_started:
-		#var touch_dist = touch_start_position.distance_to(get_global_mouse_position())
-		##print("touch_start_dist ", touch_start_dist, " touch dist   ", touch_dist)
-		#var touch_dist_diff = abs(touch_start_dist - touch_dist)
-		##print("touch diff ", touch_dist_diff)
-		#if touch_dist_diff > 5.0:
-			#velocity.x = 0
-	# Add the gravity.
+
 	if not is_on_floor():
 		velocity.y += gravity * delta
 		in_air = true
