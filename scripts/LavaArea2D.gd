@@ -35,7 +35,7 @@ func _on_body_entered(body: Node2D) -> void:
 		print("tile_pos ", tile_pos)
 		var ac = liquidtilemap.get_cell_atlas_coords(tile_pos)
 		print("Lava hit ", ac)
-		if ac == Vector2i(6,12):
+		if ac == GameManager.DEFAULT_WATER_CELL:
 			tilemap.set_cell(tile_pos,0,Vector2i(1,0))
 			liquidtilemap.erase_cell(tile_pos)
 			liquidserver.remove_liquid(tile_pos.x, tile_pos.y,100.0)

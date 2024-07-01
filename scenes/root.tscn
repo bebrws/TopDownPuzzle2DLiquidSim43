@@ -388,6 +388,7 @@ texture = ExtResource("9_1suir")
 script = ExtResource("10_il3kv")
 
 [node name="StarControlLabel" type="Label" parent="StarControl"]
+layout_mode = 0
 offset_left = 203.105
 offset_top = 427.588
 offset_right = 349.105
@@ -397,3 +398,4 @@ text = "Press C"
 label_settings = SubResource("LabelSettings_ufpuk")
 
 [node name="Star" parent="." instance=ExtResource("10_eudhu")]
+position = Vector2(334, -16)

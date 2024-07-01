@@ -85,7 +85,21 @@ const GROUND_CELLS = [
 
 
 
-
+func get_camera_screen_width_and_height():
+	var viewport = get_viewport()
+	var camera = viewport.get_camera_2d()
+	
+	if camera:
+		var viewport_size = viewport.get_visible_rect().size
+		var screen_width = viewport_size.x / camera.zoom.x
+		var screen_height = viewport_size.y / camera.zoom.y
+		return [screen_width, screen_height]
+	else:
+		print("No active Camera2D found")
+		return [0,0]
+		
+		
+		
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	pass # Replace with function body.

@@ -8,22 +8,9 @@ var screen_height: float
 
 var last_sc_x = 0.0
 var last_sc_y = 0.0
-
-func get_camera_screen_width_and_height():
-	var viewport = get_viewport()
-	var camera = self # viewport.get_camera_2d()
-	
-	if camera:
-		var viewport_size = viewport.get_visible_rect().size
-		var screen_width = viewport_size.x / camera.zoom.x
-		var screen_height = viewport_size.y / camera.zoom.y
-		return [screen_width, screen_height]
-	else:
-		print("No active Camera2D found")
-		return [0,0]
 		
 func _ready():
-	var screen_width_and_height = get_camera_screen_width_and_height()
+	var screen_width_and_height = GameManager.get_camera_screen_width_and_height()
 	screen_width = screen_width_and_height[0]
 	screen_height = screen_width_and_height[1]
 	
