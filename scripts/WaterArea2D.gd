@@ -24,20 +24,20 @@ func _process(delta: float) -> void:
 
 func _on_body_entered(body: Node2D) -> void:
 	#if not ("miner" in body.get_groups()):
-	#print("Water hit ", body)
+	print("Water hit ", body)
 	if body is TileMapLayer:
 		#print("Collision wiht tilemap")		
 		var collshape: RectangleShape2D = $WaterCollisionShape2D.shape		
 		#var collision_point = self.global_position + Vector2(0.0, collshape.size.y)
 		var collision_point = self.global_position
 		#print("self.global_position ", self.global_position, "  collision_point ", collision_point)
-		var tile_pos = liquidtilemap.local_to_map(liquidtilemap.to_local(root.to_local(collision_point)))
+		var tile_pos = body.local_to_map(body.to_local(root.to_local(collision_point)))
 		print("tile_pos ", tile_pos)
-		var ac = liquidtilemap.get_cell_atlas_coords(tile_pos)
+		var ac = body.get_cell_atlas_coords(tile_pos)
 		print("Water hit ", ac)
 		if ac == GameManager.DEFAULT_LAVA_CELL:
-			tilemap.set_cell(tile_pos,0,Vector2i(1,0))
-			liquidtilemap.erase_cell(tile_pos)
+			body.set_cell(tile_pos,0,Vector2i(1,0))
+			body.erase_cell(tile_pos)
 			liquidserver.remove_liquid(tile_pos.x, tile_pos.y,100.0)
 		#var isEmpty = tilemap.get_cell_source_id(tile_pos)
 		#if isEmpty == -1:

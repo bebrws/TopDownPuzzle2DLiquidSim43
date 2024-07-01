@@ -9,6 +9,8 @@ var touch_start_vp_position
 var start_global_position
 var touch_started
 var cam_x
+var cam: Camera2D
+var star_sprite: Sprite2D
 
 func _unhandled_input(event):
 	if Input.is_action_pressed("star_control"):
@@ -53,7 +55,14 @@ func _touch_ended():
 			
 
 func _ready() -> void:
-	cam_x = get_viewport().get_camera_2d().position.x
+	cam = get_viewport().get_camera_2d()
+	cam_x = cam.position.x
+	
+	star_sprite = get_node("StarSprite2D")
+	
+	var sssize = star_sprite.texture.get_size() * star_sprite.scale
+	#print("sssize", sssize)
+	
 						
 func _physics_process(delta: float) -> void:
 	#if direction != 0:
@@ -74,13 +83,14 @@ func _physics_process(delta: float) -> void:
 	#self.get_node("StarSprite2D")
 	var mov = direction * SPEED * delta
 	if direction != 0:
-		#print("cam_x_diff ", cam_x_diff, " wha  ", wha, " cmaera ", get_viewport().get_camera_2d().position)
-		#print("pos x ", self.position.x)
+		#print(" cmaera ", get_viewport().get_camera_2d().position)
+		var local_to_cam = cam.to_local(self.global_position)
+		#print("pos x ", local_to_cam)
 		#print("minus w/2 ", self.position.x - w/2)
 		#print("if d ", direction != 0)
 		#print("if p ", abs(self.position.x + mov) < 215 + cam_x_diff)
 		#print("if  ", direction != 0 and abs(self.position.x + mov + cam_x_diff) < 215)
-		if direction != 0 and self.position.x + mov > 120 and self.position.x + mov < 560:
+		if abs(local_to_cam.x + mov) < 275:
 			self.position.x += mov
 		
 	#cam_x = get_viewport().get_camera_2d().position.x

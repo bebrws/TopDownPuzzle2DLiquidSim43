@@ -13,11 +13,11 @@ func _input(event):
 	var screen_height = screen_width_and_height[1]
 	
 	if Input.is_action_pressed("lava_drop"):
-		var sssize = star_sprite.texture.get_size() * star_sprite.scale
+		var sssize = star_sprite.texture.get_size() * star_sprite.scale * star.scale
 		var pos = self.local_to_map(self.to_local(star.global_position) + Vector2(sssize.x/2, 0.0))
 		lava_server.add_liquid(pos.x, pos.y, 1);
 	elif Input.is_action_pressed("ui_accept"):
-		var sssize = star_sprite.texture.get_size() * star_sprite.scale
+		var sssize = star_sprite.texture.get_size() * star_sprite.scale * star.scale
 		var pos = self.local_to_map(self.to_local(star.global_position) - Vector2(sssize.x/2, 0.0))
 		water_server.add_liquid(pos.x, pos.y, 1);
 

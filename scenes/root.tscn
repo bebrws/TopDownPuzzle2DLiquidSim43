@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=4 uid="uid://c1adoqgsj3nol"]
+[gd_scene load_steps=21 format=4 uid="uid://c1adoqgsj3nol"]
 
 [ext_resource type="Texture2D" uid="uid://6o1yldw1lyrq" path="res://tiles/world_tileset.png" id="2_hggoa"]
 [ext_resource type="PackedScene" uid="uid://n2onogbvk7it" path="res://scenes/jenny.tscn" id="3_xywe6"]
@@ -340,6 +340,11 @@ script = ExtResource("8_hmsry")
 tile_map_path = NodePath("../TileMapLayer")
 one_way_collision = false
 
+[sub_resource type="Resource" id="Resource_ilt5b"]
+script = ExtResource("8_hmsry")
+tile_map_path = NodePath("../LiquidTileMapLayer")
+one_way_collision = false
+
 [sub_resource type="LabelSettings" id="LabelSettings_ufpuk"]
 font_size = 42
 
@@ -378,7 +383,7 @@ script = ExtResource("9_m5k3c")
 [node name="LavaServer" type="Node" parent="."]
 script = ExtResource("6_aw3s6")
 liquid = ExtResource("8_yx1xs")
-_maps = Array[ExtResource("8_hmsry")]([SubResource("Resource_26wa3")])
+_maps = Array[ExtResource("8_hmsry")]([SubResource("Resource_26wa3"), SubResource("Resource_ilt5b")])
 
 [node name="StarControl" type="TextureRect" parent="."]
 offset_right = 500.0
@@ -398,4 +403,4 @@ text = "Press C"
 label_settings = SubResource("LabelSettings_ufpuk")
 
 [node name="Star" parent="." instance=ExtResource("10_eudhu")]
-position = Vector2(334, -16)
+position = Vector2(334, -61)

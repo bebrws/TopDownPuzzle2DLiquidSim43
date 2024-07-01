@@ -23,6 +23,8 @@ max_opacity = 0.6
 texture = SubResource("GradientTexture2D_mkokw")
 
 [node name="WaterArea2D" type="Area2D" parent="."]
+collision_layer = 3
+collision_mask = 3
 script = ExtResource("2_w01dx")
 
 [node name="WaterCollisionShape2D" type="CollisionShape2D" parent="WaterArea2D"]

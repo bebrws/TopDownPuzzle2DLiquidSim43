@@ -15,8 +15,12 @@ max_opacity = 0.6
 texture = ExtResource("2_852o8")
 
 [node name="LavaArea2D" type="Area2D" parent="."]
+collision_layer = 3
+collision_mask = 3
 script = ExtResource("3_1fsf7")
 
 [node name="LavaCollisionShape2D" type="CollisionShape2D" parent="LavaArea2D"]
 scale = Vector2(0.902729, 0.902729)
 shape = SubResource("RectangleShape2D_154i3")
+
+[connection signal="body_entered" from="LavaArea2D" to="LavaArea2D" method="_on_body_entered"]
