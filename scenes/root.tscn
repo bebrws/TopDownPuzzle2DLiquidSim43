@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=4 uid="uid://c1adoqgsj3nol"]
+[gd_scene load_steps=20 format=4 uid="uid://c1adoqgsj3nol"]
 
 [ext_resource type="Texture2D" uid="uid://6o1yldw1lyrq" path="res://tiles/world_tileset.png" id="2_hggoa"]
 [ext_resource type="PackedScene" uid="uid://n2onogbvk7it" path="res://scenes/jenny.tscn" id="3_xywe6"]
@@ -9,6 +9,8 @@
 [ext_resource type="PackedScene" uid="uid://dnyt341wlypse" path="res://scenes/lava.tscn" id="8_yx1xs"]
 [ext_resource type="Texture2D" uid="uid://b0ikxql4q6ffr" path="res://sprites/props/star-alone.png" id="9_1suir"]
 [ext_resource type="Script" path="res://scenes/TileMapLayer.gd" id="9_m5k3c"]
+[ext_resource type="PackedScene" uid="uid://cf1l1hsxuh5ts" path="res://scenes/star.tscn" id="10_eudhu"]
+[ext_resource type="Script" path="res://scenes/StarControl.gd" id="10_il3kv"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_mglr3"]
 texture = ExtResource("2_hggoa")
@@ -338,6 +340,9 @@ script = ExtResource("8_hmsry")
 tile_map_path = NodePath("../TileMapLayer")
 one_way_collision = false
 
+[sub_resource type="LabelSettings" id="LabelSettings_ufpuk"]
+font_size = 42
+
 [node name="Root" type="Node2D"]
 
 [node name="PropsTileMapLayer" type="TileMapLayer" parent="."]
@@ -349,10 +354,10 @@ position = Vector2(342, 85)
 zoom = Vector2(4, 4)
 script = ExtResource("4_urxve")
 
-[node name="JennyCharacterBody2D" parent="." instance=ExtResource("3_xywe6")]
+[node name="Jenny" parent="." instance=ExtResource("3_xywe6")]
 position = Vector2(342, 85)
 
-[node name="RemoteTransform2D" type="RemoteTransform2D" parent="JennyCharacterBody2D"]
+[node name="RemoteTransform2D" type="RemoteTransform2D" parent="Jenny"]
 remote_path = NodePath("../../Camera2D")
 
 [node name="LiquidServer" type="Node" parent="."]
@@ -378,13 +383,17 @@ _maps = Array[ExtResource("8_hmsry")]([SubResource("Resource_26wa3")])
 [node name="StarControl" type="TextureRect" parent="."]
 offset_right = 500.0
 offset_bottom = 468.0
-scale = Vector2(0.0935478, 0.0935478)
+scale = Vector2(0.1, 0.1)
 texture = ExtResource("9_1suir")
+script = ExtResource("10_il3kv")
 
-[node name="StarControlLabel" type="Label" parent="."]
-offset_left = 4.0
-offset_top = 41.0
-offset_right = 60.0
-offset_bottom = 64.0
+[node name="StarControlLabel" type="Label" parent="StarControl"]
+offset_left = 203.105
+offset_top = 427.588
+offset_right = 349.105
+offset_bottom = 485.588
 scale = Vector2(0.723396, 0.723396)
 text = "Press C"
+label_settings = SubResource("LabelSettings_ufpuk")
+
+[node name="Star" parent="." instance=ExtResource("10_eudhu")]

@@ -1,0 +1,42 @@
+[gd_scene load_steps=6 format=3 uid="uid://cf1l1hsxuh5ts"]
+
+[ext_resource type="Script" path="res://scripts/StarCharacterBody2D.gd" id="1_leykl"]
+[ext_resource type="Texture2D" uid="uid://cba0lucgijv7f" path="res://sprites/props/star.png" id="2_4nvcx"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_m2hah"]
+size = Vector2(20, 17.7143)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_403wy"]
+size = Vector2(21.8927, 25.2721)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_wiee1"]
+size = Vector2(23.6337, 30.1541)
+
+[node name="StarCharacterBody2D" type="CharacterBody2D"]
+position = Vector2(2.08165e-12, -12)
+script = ExtResource("1_leykl")
+
+[node name="StarSprite2D" type="Sprite2D" parent="."]
+position = Vector2(345, -5)
+scale = Vector2(0.173945, 0.173945)
+texture = ExtResource("2_4nvcx")
+
+[node name="StarCollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(345, -6)
+rotation = 3.14159
+scale = Vector2(7, 7)
+shape = SubResource("RectangleShape2D_m2hah")
+
+[node name="StarWaterArea2D" type="Area2D" parent="."]
+
+[node name="StarWaterCollisionShape2D" type="CollisionShape2D" parent="StarWaterArea2D"]
+position = Vector2(295, 26)
+scale = Vector2(1.8987, 2.09583)
+shape = SubResource("RectangleShape2D_403wy")
+
+[node name="StarLavaArea2D" type="Area2D" parent="."]
+
+[node name="StarLavaCollisionShape2D" type="CollisionShape2D" parent="StarLavaArea2D"]
+position = Vector2(395.065, 26.565)
+scale = Vector2(1.687, 1.687)
+shape = SubResource("RectangleShape2D_wiee1")

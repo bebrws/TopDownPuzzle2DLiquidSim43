@@ -2,23 +2,21 @@
 
 [ext_resource type="Script" path="res://addons/liquidsimulator/Liquid.gd" id="1_r3w6f"]
 [ext_resource type="Texture2D" uid="uid://dblu8yj4vrgdf" path="res://sprites/props/lava.png" id="2_852o8"]
-[ext_resource type="Script" path="res://scripts/water_area_2d.gd" id="2_u61de"]
+[ext_resource type="Script" path="res://scripts/LavaArea2D.gd" id="3_1fsf7"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_154i3"]
 
-[node name="Liquid" type="Node2D" node_paths=PackedStringArray("sprite")]
+[node name="Lava" type="Node2D" node_paths=PackedStringArray("sprite")]
 script = ExtResource("1_r3w6f")
-sprite = NodePath("Sprite")
+sprite = NodePath("LavaSprite")
 max_opacity = 0.6
 
-[node name="Sprite" type="Sprite2D" parent="."]
+[node name="LavaSprite" type="Sprite2D" parent="."]
 texture = ExtResource("2_852o8")
 
-[node name="WaterArea2D" type="Area2D" parent="."]
-script = ExtResource("2_u61de")
+[node name="LavaArea2D" type="Area2D" parent="."]
+script = ExtResource("3_1fsf7")
 
-[node name="WaterCollisionShape2D" type="CollisionShape2D" parent="WaterArea2D"]
+[node name="LavaCollisionShape2D" type="CollisionShape2D" parent="LavaArea2D"]
 scale = Vector2(0.902729, 0.902729)
 shape = SubResource("RectangleShape2D_154i3")
-
-[connection signal="body_entered" from="WaterArea2D" to="WaterArea2D" method="_on_body_entered"]
