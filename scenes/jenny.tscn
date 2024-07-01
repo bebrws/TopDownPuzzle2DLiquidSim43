@@ -1,8 +1,9 @@
-[gd_scene load_steps=10 format=3 uid="uid://n2onogbvk7it"]
+[gd_scene load_steps=11 format=3 uid="uid://n2onogbvk7it"]
 
 [ext_resource type="Script" path="res://scripts/JennyCharacterBody2D.gd" id="1_133wn"]
 [ext_resource type="Texture2D" uid="uid://bbvb7m0v8mijw" path="res://sprites/characters/jenny1/JennySpriteSheet.png" id="2_gj4q5"]
 [ext_resource type="Texture2D" uid="uid://doe6cbgqqjk6v" path="res://icon.svg" id="3_onljp"]
+[ext_resource type="Script" path="res://scripts/JennyArea2D.gd" id="4_ylc0h"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_4nuql"]
 atlas = ExtResource("2_gj4q5")
@@ -61,7 +62,6 @@ scale = Vector2(1.06461, 1.03136)
 shape = SubResource("RectangleShape2D_lorsy")
 
 [node name="GunNode2D" type="Node2D" parent="."]
-visible = false
 position = Vector2(10, -12)
 
 [node name="GunSprite2D" type="Sprite2D" parent="GunNode2D"]
@@ -72,3 +72,15 @@ texture = ExtResource("3_onljp")
 
 [node name="CenterNode2D" type="Node2D" parent="."]
 position = Vector2(0, -11)
+
+[node name="JennyArea2D" type="Area2D" parent="."]
+collision_mask = 3
+script = ExtResource("4_ylc0h")
+
+[node name="JennyCollisionShape2DForArea" type="CollisionShape2D" parent="JennyArea2D"]
+position = Vector2(0, -11.5)
+scale = Vector2(1.06461, 1.03136)
+shape = SubResource("RectangleShape2D_lorsy")
+
+[connection signal="area_entered" from="JennyArea2D" to="JennyArea2D" method="_on_area_entered"]
+[connection signal="body_entered" from="JennyArea2D" to="JennyArea2D" method="_on_body_entered"]

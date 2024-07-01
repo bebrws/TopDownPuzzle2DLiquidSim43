@@ -3,6 +3,8 @@ extends TileMap
 
 var delta_sum = 0.0
 var water_tiles = []
+
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	var tile_cells: Array[Vector2i] = self.get_used_cells(0)
@@ -48,14 +50,19 @@ func _process(delta: float) -> void:
 		var water_dir_index = randi() % len(water_flow_dirs)
 		
 		for water_tile_coord in new_water_tiles_vert:
-			var tilemap_below_coords = self.get_neighbor_cell(water_tile_coord, water_flow_dirs[water_dir_index])
-			var atlas_below_water_coords = self.get_cell_atlas_coords(0, tilemap_below_coords)
-			#print("water_tile_coords sides ", tilemap_below_coords)
-			if atlas_below_water_coords in GameManager.EMPTY_CELLS:
+			var tilemap_side_coords = self.get_neighbor_cell(water_tile_coord, water_flow_dirs[water_dir_index])
+			var atlas_below_water_coords = self.get_cell_atlas_coords(0, tilemap_side_coords)
+			#print("water_tile_coords sides ", tilemap_side_coords)
+			var tilemap_below_coords = self.get_neighbor_cell(water_tile_coord, TileSet.CELL_NEIGHBOR_BOTTOM_SIDE)
+			var atlas_side_water_coords = self.get_cell_atlas_coords(0, tilemap_below_coords)
+			#print("water_tile_coords sides ", tilemap_side_coords)
+			#if atlas_below_water_coords in GameManager.EMPTY_CELLS:			
+			
+			if atlas_side_water_coords in GameManager.EMPTY_CELLS:
 				#print("FINDING EMPOTY")
-				#print("BEB tilemap_below_coords", tilemap_below_coords, "has empty cell")
-				new_water_tiles_hor.push_back(tilemap_below_coords)
-				self.set_cell(0, tilemap_below_coords, 1, GameManager.DEFAULT_WATER_CELL)
+				#print("BEB tilemap_side_coords", tilemap_side_coords, "has empty cell")
+				new_water_tiles_hor.push_back(tilemap_side_coords)
+				self.set_cell(0, tilemap_side_coords, 1, GameManager.DEFAULT_WATER_CELL)
 				self.set_cell(0, water_tile_coord, 1, GameManager.DEFAULT_EMPTY_CELL)
 			else:
 				new_water_tiles_hor.push_back(water_tile_coord)
@@ -124,4 +131,3 @@ func _process_will_stop(delta: float) -> void:
 			water_tiles = new_water_tiles_hor
 		else:
 			water_tiles = new_water_tiles_vert
-

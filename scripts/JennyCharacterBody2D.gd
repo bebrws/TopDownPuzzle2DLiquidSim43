@@ -1,6 +1,9 @@
 extends CharacterBody2D
 
 var bullet_scene: PackedScene = preload("res://scenes/bullet.tscn")
+var box_scene: PackedScene = preload("res://scenes/box.tscn")
+
+
 
 @onready var sprite: AnimatedSprite2D = $JennyAnimatedSprite2D
 @onready var gunNode: Node2D = $GunNode2D
@@ -15,7 +18,7 @@ const JUMP_VELOCITY = -400.0
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var gravity: int = ProjectSettings.get_setting("physics/2d/default_gravity")
 
-
+var tilemap: TileMapLayer
 
 # FOR TOUCH SIM
 var touch_start_vp_point: Vector2
@@ -45,7 +48,9 @@ func _unhandled_input(event):
 			else:
 				_touch_ended(event.position)
 				
-
+func tap_in_jenny():
+	return abs(get_global_mouse_position().x - centerNode.global_position.x) < 10 and abs(get_global_mouse_position().y - centerNode.global_position.y) < 15	
+	
 func _touch_began(event_position: Vector2):
 	#print("BEB tocuh ", event_position, " vp ", get_viewport().get_mouse_position()
 	
@@ -62,7 +67,7 @@ func _touch_began(event_position: Vector2):
 	#print("touch_start_vp_point.y ", touch_start_vp_point.y, "  self.global_position.y ", self.global_position.y)
 	#print("cn.y  ", centerNode.global_position.y)
 	#print("get_global_mouse_position().y  ", get_global_mouse_position().y)
-	if abs(get_global_mouse_position().x - centerNode.global_position.x) < 10 and abs(get_global_mouse_position().y - centerNode.global_position.y) < 15:
+	if tap_in_jenny():
 		started_in_character = true
 	
 	if not started_in_character and is_on_floor():
@@ -89,17 +94,63 @@ func _touch_ended(event_position: Vector2):
 			
 func _handle_double_tap(event_position: Vector2):
 	print("Double Tap at ", event_position, " vp ", get_viewport().get_mouse_position(), " self ", self.global_position)
-	var velxadd = (get_global_mouse_position().x - self.global_position.x) * 4
-	# var velxadd = (get_viewport().get_mouse_position().x - touch_start_vp_point.x) * 4
-	#var velxadd = (get_viewport().get_mouse_position().x - self.global_position.x) * 4
-	if velxadd > 100.0:
-		velxadd = 100.0
-	if velxadd < -100.0:
-		velxadd = -100.0
-	print("velxadd ",  velxadd)
-	if is_on_floor():
-		velocity.y = JUMP_VELOCITY
-		velocity.x = velxadd
+	if tap_in_jenny():
+		var box: Area2D = get_tree().root.get_node("/root/Box")
+		if box:
+			self.global_position.y -= 20.0
+			var below_tile_point = box.global_position + Vector2(0.0, 30.0)
+			var below_tile_pos = tilemap.local_to_map(tilemap.to_local(below_tile_point))
+			var below_below_tile_point = box.global_position + Vector2(0.0, 30.0)
+			var below_below_tile_pos = tilemap.local_to_map(tilemap.to_local(below_below_tile_point))
+			var bbac = tilemap.get_cell_atlas_coords(below_below_tile_pos)
+			print("box at tile_pos ", below_tile_pos, " bbac ", bbac)
+			if bbac == Vector2i(-1,-1):
+				below_tile_point = box.global_position + Vector2(16.0, 30.0)
+				below_tile_pos = tilemap.local_to_map(tilemap.to_local(below_tile_point))
+				below_below_tile_point = box.global_position + Vector2(16.0, 46.0)
+				below_below_tile_pos = tilemap.local_to_map(tilemap.to_local(below_below_tile_point))
+				bbac = tilemap.get_cell_atlas_coords(below_below_tile_pos)
+			if bbac == Vector2i(-1,-1):
+				below_tile_point = box.global_position + Vector2(-16.0, 30.0)
+				below_tile_pos = tilemap.local_to_map(tilemap.to_local(below_tile_point))
+				below_below_tile_point = box.global_position + Vector2(-16.0, 46.0)
+				below_below_tile_pos = tilemap.local_to_map(tilemap.to_local(below_below_tile_point))
+				bbac = tilemap.get_cell_atlas_coords(below_below_tile_pos)				
+			tilemap.set_cell(below_tile_pos, 0, Vector2i(7,3))
+			box.queue_free()
+		else:
+			print("double tap in jenny")
+			var collision_point = self.global_position
+			print("self.global_position ", self.global_position, "  collision_point ", collision_point)
+
+			var tile_pos = tilemap.local_to_map(tilemap.to_local(collision_point))
+			print("Standing at tile_pos ", tile_pos)
+			var ac = tilemap.get_cell_atlas_coords(tile_pos)
+			#print("ac ", ac)
+			#var bac_pos = tilemap.get_neighbor_cell(tile_pos, TileSet.CELL_NEIGHBOR_BOTTOM_SIDE)
+			#print("bac_pos ", bac_pos)
+			#var bac = tilemap.get_cell_atlas_coords(bac_pos)
+			#print("bac ", bac)
+			if ac == Vector2i(7,3):
+				tilemap.erase_cell(tile_pos)
+				var b= box_scene.instantiate()
+				b.global_position = self.global_position - Vector2(0.0, 35.0)
+				#b.position = self.position - Vector2(0.0, 30.0)
+				get_tree().root.add_child(b)
+				#self.add _child(b)
+		
+	else:
+		var velxadd = (get_global_mouse_position().x - self.global_position.x) * 4
+		# var velxadd = (get_viewport().get_mouse_position().x - touch_start_vp_point.x) * 4
+		#var velxadd = (get_viewport().get_mouse_position().x - self.global_position.x) * 4
+		if velxadd > 100.0:
+			velxadd = 100.0
+		if velxadd < -100.0:
+			velxadd = -100.0
+		print("velxadd ",  velxadd)
+		if is_on_floor():
+			velocity.y = JUMP_VELOCITY
+			velocity.x = velxadd
 
 func _handle_long_press(event_position: Vector2):
 	if started_in_character:
@@ -115,8 +166,14 @@ func _ready() -> void:
 	sprite.play("standing")
 	original_position = sprite.position
 	
-func _physics_process(delta: float) -> void:
+	tilemap = get_tree().get_current_scene().get_node("/root/Root/PropsTileMapLayer")
 	
+func _physics_process(delta: float) -> void:
+	#print(get_tree().root.get_children())
+	var box: Area2D = get_tree().root.get_node("/root/Box")
+	if box:
+		box.global_position = self.global_position - Vector2(0.0, 35.0)
+		#box.velocity = self.velocity
 	#print("m ", get_viewport().get_mouse_position(), "   gm  ", get_global_mouse_position())
 	
 	

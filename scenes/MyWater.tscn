@@ -1,0 +1,34 @@
+[gd_scene load_steps=6 format=3 uid="uid://b1inc6ugfbwi3"]
+
+[ext_resource type="Script" path="res://addons/liquidsimulator/Liquid.gd" id="1_ldbgl"]
+[ext_resource type="Script" path="res://scripts/water_area_2d.gd" id="2_glcae"]
+
+[sub_resource type="Gradient" id="Gradient_ggunt"]
+offsets = PackedFloat32Array(0)
+colors = PackedColorArray(0.157, 0.714, 1, 0.6)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_mkokw"]
+gradient = SubResource("Gradient_ggunt")
+width = 16
+height = 16
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_154i3"]
+
+[node name="Liquid" type="Node2D" node_paths=PackedStringArray("sprite")]
+script = ExtResource("1_ldbgl")
+sprite = NodePath("Sprite")
+max_opacity = 0.6
+
+[node name="Sprite" type="Sprite2D" parent="."]
+texture = SubResource("GradientTexture2D_mkokw")
+
+[node name="WaterArea2D" type="Area2D" parent="."]
+collision_layer = 5
+collision_mask = 7
+script = ExtResource("2_glcae")
+
+[node name="WaterCollisionShape2D" type="CollisionShape2D" parent="WaterArea2D"]
+scale = Vector2(0.902729, 0.902729)
+shape = SubResource("RectangleShape2D_154i3")
+
+[connection signal="body_entered" from="WaterArea2D" to="WaterArea2D" method="_on_body_entered"]
