@@ -41,20 +41,27 @@ func _on_body_entered(body: Node2D) -> void:
 		print("Bullet hit ", body)
 		if body is TileMapLayer:					
 			var collision_point = self.global_position + (bullet_direction * DIR_INC)
-			print("self.global_position ", self.global_position, "  collision_point ", collision_point)
+			var ac = Vector2i(-1,-1)
+			var tile_pos
+			while ac == Vector2i(-1,-1):
+				print("self.global_position ", self.global_position, "  collision_point ", collision_point)
 
-			var tile_pos = tilemap.local_to_map(tilemap.to_local(collision_point))
-			var ac = tilemap.get_cell_atlas_coords(tile_pos)
-			var cs = tilemap.get_cell_source_id(tile_pos)
-			if cs == -1:
+				tile_pos = tilemap.local_to_map(tilemap.to_local(collision_point))
+				ac = tilemap.get_cell_atlas_coords(tile_pos)
+				print("ac hit ", ac)
+				if ac == Vector2i(-1,-1):
+					collision_point += bullet_direction * DIR_INC
+			
+			#var cs = tilemap.get_cell_source_id(tile_pos)
+			#if cs == -1:
 			#if ac in GameManager.EMPTY_CELLS:
-				collision_point += bullet_direction * DIR_INC
-			else:
-				#tilemap.set_cell(tile_pos, 1, GameManager.DEFAULT_EMPTY_CELL)
-				tilemap.erase_cell(tile_pos)
-				var ls = get_tree().root.get_node_or_null("/root/Root/LiquidServer")
-				ls.start()
-				ls.update_simulation()
+				
+			#else:
+			#tilemap.set_cell(tile_pos, 1, GameManager.DEFAULT_EMPTY_CELL)
+			tilemap.erase_cell(tile_pos)
+			var ls = get_tree().root.get_node_or_null("/root/Root/LiquidServer")
+			ls.start()
+			ls.update_simulation()
 					
 				#var tile_data: TileData = tilemap.get_cell_tile_data(0, tile_pos)
 				#if tile_data:
