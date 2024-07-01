@@ -127,7 +127,7 @@ func _handle_double_tap(event_position: Vector2):
 				below_below_tile_pos = tilemap.local_to_map(tilemap.to_local(below_below_tile_point))
 				bbac = tilemap.get_cell_atlas_coords(below_below_tile_pos)
 			if bbac != Vector2i(-1, -1):
-				tilemap.set_cell(below_tile_pos, 0, Vector2i(7,3))
+				tilemap.set_cell(below_tile_pos, GameManager.DEFAULT_BOX_CELL_SOURCE, GameManager.DEFAULT_BOX_CELL)
 				self.global_position.y -= 20.0
 				box.queue_free()
 		else:
@@ -136,14 +136,14 @@ func _handle_double_tap(event_position: Vector2):
 			print("self.global_position ", self.global_position, "  collision_point ", collision_point)
 
 			var tile_pos = tilemap.local_to_map(tilemap.to_local(collision_point))
-			print("Standing at tile_pos ", tile_pos)
 			var ac = tilemap.get_cell_atlas_coords(tile_pos)
+			print("Standing at tile_pos ", tile_pos, " ac below ", ac)
 			#print("ac ", ac)
 			#var bac_pos = tilemap.get_neighbor_cell(tile_pos, TileSet.CELL_NEIGHBOR_BOTTOM_SIDE)
 			#print("bac_pos ", bac_pos)
 			#var bac = tilemap.get_cell_atlas_coords(bac_pos)
 			#print("bac ", bac)
-			if ac == Vector2i(7,3):
+			if ac == GameManager.DEFAULT_BOX_CELL:
 				tilemap.erase_cell(tile_pos)
 				var b= box_scene.instantiate()
 				b.global_position = self.global_position - Vector2(0.0, 35.0)

@@ -6,10 +6,14 @@ const EMPTY_CELLS = [
 	Vector2i(5,15)
 ]
 
+const DEFAULT_BOX_CELL_SOURCE = 2
+const DEFAULT_BOX_CELL = Vector2i(9,5)
+
 const DEFAULT_WATER_CELL = Vector2i(4,10)
 
 const DEFAULT_LAVA_CELL = Vector2i(6,12)
 
+const DEFAULT_ROCK_CELL_SOURCE = 0
 const DEFAULT_ROCK_CELL = Vector2i(1,0)
 
 const WATER_CELLS = [
