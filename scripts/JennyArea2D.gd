@@ -6,12 +6,8 @@ var water_server : LiquidServer;
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	for c in get_tree().get_current_scene().get_children():
-		if c is TileMapLayer:
-			tilemap = c	
-		if c is LiquidServer:
-			water_server = c
-	pass # Replace with function body.
+	tilemap = get_tree().root.get_node("/root/Root/TileMapLayer")
+	water_server = get_tree().root.get_node("/root/Root/LiquidServer")
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.

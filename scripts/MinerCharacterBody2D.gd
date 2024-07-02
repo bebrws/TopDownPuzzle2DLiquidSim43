@@ -3,7 +3,6 @@ extends CharacterBody2D
 var bullet_scene: PackedScene = preload("res://scenes/bullet.tscn")
 
 @onready var sprite: AnimatedSprite2D = $JennyAnimatedSprite2D
-@onready var gunNode: Node2D = $GunNode2D
 @onready var centerNode: Node2D = $CenterNode2D
 
 var original_position: Vector2 = Vector2.ZERO

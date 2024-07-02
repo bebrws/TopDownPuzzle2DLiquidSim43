@@ -1,7 +1,7 @@
 @tool
 extends Area2D
 
-const DIR_INC = 2.0
+const DIR_INC = 0.5
 	
 @export var speed: float = 1000.0
 @export var bullet_direction: Vector2 = Vector2(0.0,0.0)
@@ -40,11 +40,11 @@ func _process(delta: float) -> void:
 func _on_body_entered(body: Node2D) -> void:
 	print("Bullet hit ", body)
 	if body == tilemap:					
-		var collision_point = self.global_position + (bullet_direction * DIR_INC)
+		var collision_point = self.global_position + bullet_direction
 		var ac = Vector2i(-1,-1)
 		var tile_pos
 		var loop_iterations = 0
-		while loop_iterations < 5 and ac == Vector2i(-1,-1):
+		while loop_iterations < 10 and ac == Vector2i(-1,-1):
 			#print("self.global_position ", self.global_position, "  collision_point ", collision_point)
 
 			tile_pos = tilemap.local_to_map(tilemap.to_local(collision_point))

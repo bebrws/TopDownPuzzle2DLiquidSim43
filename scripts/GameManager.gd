@@ -9,7 +9,7 @@ const EMPTY_CELLS = [
 	Vector2i(5,15)
 ]
 
-const DEFAULT_BOX_CELL_SOURCE = 2
+const DEFAULT_BOX_CELL_SOURCE = 0
 const DEFAULT_BOX_CELL = Vector2i(9,5)
 
 const DEFAULT_WATER_CELL = Vector2i(4,10)

@@ -6,7 +6,7 @@ var box_scene: PackedScene = preload("res://scenes/box.tscn")
 
 
 @onready var sprite: AnimatedSprite2D = $JennyAnimatedSprite2D
-@onready var gunNode: Node2D = $GunNode2D
+@onready var rightNode: Node2D = $RightNode2D
 @onready var centerNode: Node2D = $CenterNode2D
 
 var original_position: Vector2 = Vector2.ZERO
@@ -51,7 +51,7 @@ func _unhandled_input(event):
 func tap_in_jenny():
 	#print("tapjenny x ", abs(get_global_mouse_position().x - centerNode.global_position.x))
 	#print("tapjenny y ", abs(get_global_mouse_position().y - centerNode.global_position.y))
-	return abs(get_global_mouse_position().x - centerNode.global_position.x) < 10 and abs(get_global_mouse_position().y - centerNode.global_position.y) < 15	
+	return abs(get_global_mouse_position().x - centerNode.global_position.x) < 14 and abs(get_global_mouse_position().y - centerNode.global_position.y) < 15	
 	
 func _touch_began():
 	touch_start_position = get_global_mouse_position()
@@ -102,6 +102,7 @@ func _handle_double_tap():
 			
 			below_tile_point = box.global_position + Vector2(0.0, 16.0)
 			below_tile_pos = tilemap.local_to_map(tilemap.to_local(below_tile_point))
+			var bac = tilemap.get_cell_atlas_coords(below_tile_pos)
 			below_below_tile_point = box.global_position + Vector2(0.0, 32.0)
 			below_below_tile_pos = tilemap.local_to_map(tilemap.to_local(below_below_tile_point))
 			bbac = tilemap.get_cell_atlas_coords(below_below_tile_pos)
@@ -166,10 +167,10 @@ func _handle_long_press():
 		get_tree().root.add_child(b)
 
 func _ready() -> void:
-	sprite.play("standing")
+	sprite.play("walking")
 	original_position = sprite.position
 	
-	tilemap = get_tree().get_current_scene().get_node_or_null("/root/Root/PropsTileMapLayer")
+	tilemap = get_tree().get_current_scene().get_node_or_null("/root/Root/TileMapLayer")
 	
 func _physics_process(delta: float) -> void:
 	#print(get_tree().root.get_children())
@@ -188,16 +189,17 @@ func _physics_process(delta: float) -> void:
 	if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
 		var mp = get_global_mouse_position()
 		
-		var normalGunVector = centerNode.global_position.direction_to(gunNode.global_position)
+		var normalGunVector = centerNode.global_position.direction_to(rightNode.global_position)
 		var toMouseVector = centerNode.global_position.direction_to(mp)
 		
 		var angle = rad_to_deg(normalGunVector.angle_to(toMouseVector))
 		#print("angle ", angle)
-		gunNode.rotation_degrees = angle
 		if (angle < -90 and angle > -180) or (angle < 180 and angle > 90):
-			sprite.flip_h = false
-		else:
 			sprite.flip_h = true
+			sprite.position.x = -6
+		else:
+			sprite.flip_h = false
+			sprite.position.x = 6
 
 	var direction = 1
 	move_and_slide()
