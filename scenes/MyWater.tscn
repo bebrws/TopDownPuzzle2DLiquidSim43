@@ -31,4 +31,5 @@ script = ExtResource("2_w01dx")
 scale = Vector2(0.902729, 0.902729)
 shape = SubResource("RectangleShape2D_154i3")
 
+[connection signal="mixed" from="." to="WaterArea2D" method="_on_water_mixed"]
 [connection signal="body_entered" from="WaterArea2D" to="WaterArea2D" method="_on_body_entered"]

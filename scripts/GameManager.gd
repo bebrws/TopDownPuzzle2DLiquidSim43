@@ -1,5 +1,8 @@
 extends Node
 
+const max_water_for_level = [200.0]
+const max_laval_for_level = [200.0]
+
 const DEFAULT_EMPTY_CELL = Vector2i(5,15)
 
 const EMPTY_CELLS = [

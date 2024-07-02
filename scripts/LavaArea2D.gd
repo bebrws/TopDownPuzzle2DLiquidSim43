@@ -5,6 +5,7 @@ var tilemap: TileMapLayer
 var root: Node2D
 var liquidserver: LiquidServer
 var lavaserver: LiquidServer
+var char: CharacterBody2D
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -17,6 +18,7 @@ func _ready() -> void:
 		#elif c.name == "LiquidServer":
 			#liquidserver = c
 	root = get_tree().root.get_node("/root/Root")
+	char = get_tree().root.get_node("/root/Root/Jenny")
 	tilemap = get_tree().root.get_node("/root/Root/TileMapLayer")
 	liquidtilemap = get_tree().root.get_node("/root/Root/LiquidTileMapLayer")
 	liquidserver = get_tree().root.get_node("/root/Root/LiquidServer")
@@ -37,37 +39,35 @@ func _on_body_entered(body: Node2D) -> void:
 		var collision_point = self.global_position
 		#print("self.global_position ", self.global_position, "  collision_point ", collision_point)
 		var tile_pos = tilemap.local_to_map(tilemap.to_local(root.to_local(collision_point)))
+		var char_tile_pos = tilemap.local_to_map(tilemap.to_local(root.to_local(char.global_position)))
 		print("tile_pos ", tile_pos)
 		var ac = tilemap.get_cell_atlas_coords(tile_pos)
 		print("Lava hit ", ac)
-		if ac == Vector2i(-1,-1): #GameManager.DEFAULT_WATER_CELL:
-			#tilemap.erase_cell(tile_pos)
-			var c = liquidserver.get_cell_by_position(tile_pos.x, tile_pos.y)
-			print("cis ", c)
-			if c:
-				tilemap.set_cell(tile_pos,0,Vector2i(1,0))
-				liquidserver.remove_liquid(tile_pos.x, tile_pos.y+1,1.0)
-				liquidserver.remove_liquid(tile_pos.x, tile_pos.y,1.0)
-				liquidserver.remove_liquid(tile_pos.x, tile_pos.y-1,1.0)
-				liquidserver.remove_liquid(tile_pos.x+1, tile_pos.y+1,1.0)
-				liquidserver.remove_liquid(tile_pos.x, tile_pos.y,1.0)
-				liquidserver.remove_liquid(tile_pos.x-1, tile_pos.y-1,1.0)	
-				lavaserver.remove_liquid(tile_pos.x, tile_pos.y+1,1.0)
-				lavaserver.remove_liquid(tile_pos.x, tile_pos.y,1.0)
-				lavaserver.remove_liquid(tile_pos.x, tile_pos.y-1,1.0)
-				lavaserver.remove_liquid(tile_pos.x+1, tile_pos.y+1,1.0)
-				lavaserver.remove_liquid(tile_pos.x, tile_pos.y,1.0)
-				lavaserver.remove_liquid(tile_pos.x-1, tile_pos.y-1,1.0)			
-		#var isEmpty = tilemap.get_cell_source_id(tile_pos)
-		#if isEmpty == -1:
-			#var empty = true
-		#if ac in GameManager.EMPTY_CELLS:
-			#collision_point += bullet_direction * DIR_INC
-		#else:
-			#tilemap.set_cell(0, tile_pos, 1, GameManager.DEFAULT_EMPTY_CELL)
-				
-			#var tile_data: TileData = tilemap.get_cell_tile_data(0, tile_pos)
-			#if tile_data:
-				#print("Hit tile at: ", tile_pos)
-				#tilemap.set_cell(0, tile_pos, 1, Vector2i(1,0), 2)
-		queue_free()
+		if char_tile_pos != tile_pos:
+			if true or ac == Vector2i(-1,-1):
+				var lam = lavaserver.get_liquid(tile_pos.x, tile_pos.y)
+				var wam = liquidserver.get_liquid(tile_pos.x, tile_pos.y)
+				print("lam ", lam)
+				var w = liquidserver.get_cell_by_position(tile_pos.x, tile_pos.y)
+				var l = lavaserver.get_cell_by_position(tile_pos.x, tile_pos.y)
+				print("wam ", wam, "  lam  ", lam)
+				#if w  and l and w.sprite != l.sprite:
+				if wam != 0.0:
+					print("converting ", tile_pos)
+					tilemap.set_cell(tile_pos,0,Vector2i(1,0))
+					liquidserver.remove_liquid(tile_pos.x, tile_pos.y+1,1.0)
+					liquidserver.remove_liquid(tile_pos.x, tile_pos.y,1.0)
+					liquidserver.remove_liquid(tile_pos.x, tile_pos.y-1,1.0)
+					liquidserver.remove_liquid(tile_pos.x+1, tile_pos.y+1,1.0)
+					liquidserver.remove_liquid(tile_pos.x, tile_pos.y,1.0)
+					liquidserver.remove_liquid(tile_pos.x-1, tile_pos.y-1,1.0)	
+					lavaserver.remove_liquid(tile_pos.x, tile_pos.y+1,1.0)
+					lavaserver.remove_liquid(tile_pos.x, tile_pos.y,1.0)
+					lavaserver.remove_liquid(tile_pos.x, tile_pos.y-1,1.0)
+					lavaserver.remove_liquid(tile_pos.x+1, tile_pos.y+1,1.0)
+					lavaserver.remove_liquid(tile_pos.x, tile_pos.y,1.0)
+					lavaserver.remove_liquid(tile_pos.x-1, tile_pos.y-1,1.0)
+					
+					#if w:
+						#w.cleanup_cell()
+		

@@ -14,7 +14,13 @@ var star_sprite: Sprite2D
 
 func _unhandled_input(event):
 	if Input.is_action_pressed("star_control"):
-		if event is InputEventMouseButton:
+		if Input.is_action_pressed("ui_left"):
+			direction = -1
+		elif Input.is_action_pressed("ui_right"):
+			direction = 1	
+		elif direction != 0 and (Input.is_action_just_released("ui_left") or Input.is_action_just_released("ui_right")):
+			direction = 0 
+		elif event is InputEventMouseButton:
 			if event.button_index == MOUSE_BUTTON_LEFT:
 				#if event.is_double_click():
 					#_handle_double_tap()
