@@ -1,5 +1,6 @@
 extends Area2D
 
+var treestilemap: TileMapLayer
 var liquidtilemap: TileMapLayer
 var tilemap: TileMapLayer
 var root: Node2D
@@ -21,6 +22,7 @@ func _ready() -> void:
 	char = get_tree().root.get_node("/root/Root/Jenny")
 	tilemap = get_tree().root.get_node("/root/Root/TileMapLayer")
 	liquidtilemap = get_tree().root.get_node("/root/Root/LiquidTileMapLayer")
+	treestilemap = get_tree().root.get_node("/root/Root/TreesTileMapLayer")
 	liquidserver = get_tree().root.get_node("/root/Root/LiquidServer")
 	lavaserver = get_tree().root.get_node("/root/Root/LavaServer")
 
@@ -31,43 +33,15 @@ func _process(delta: float) -> void:
 
 func _on_body_entered(body: Node2D) -> void:
 	#if not ("miner" in body.get_groups()):
-	print("Lava hit ", body)
+	#print("Lava hit ", body)
 	if body is TileMapLayer:
-		#print("Collision wiht tilemap")		
-		var collshape: RectangleShape2D = $LavaCollisionShape2D.shape		
-		#var collision_point = self.global_position + Vector2(0.0, collshape.size.y)
+		#var collshape: RectangleShape2D = $LavaCollisionShape2D.shape		
 		var collision_point = self.global_position
-		#print("self.global_position ", self.global_position, "  collision_point ", collision_point)
-		var tile_pos = tilemap.local_to_map(tilemap.to_local(root.to_local(collision_point)))
-		var char_tile_pos = tilemap.local_to_map(tilemap.to_local(root.to_local(char.global_position)))
-		print("tile_pos ", tile_pos)
-		var ac = tilemap.get_cell_atlas_coords(tile_pos)
-		print("Lava hit ", ac)
-		if char_tile_pos != tile_pos:
-			if true or ac == Vector2i(-1,-1):
-				var lam = lavaserver.get_liquid(tile_pos.x, tile_pos.y)
-				var wam = liquidserver.get_liquid(tile_pos.x, tile_pos.y)
-				print("lam ", lam)
-				var w = liquidserver.get_cell_by_position(tile_pos.x, tile_pos.y)
-				var l = lavaserver.get_cell_by_position(tile_pos.x, tile_pos.y)
-				print("wam ", wam, "  lam  ", lam)
-				#if w  and l and w.sprite != l.sprite:
-				if wam != 0.0:
-					print("converting ", tile_pos)
-					tilemap.set_cell(tile_pos,0,Vector2i(1,0))
-					liquidserver.remove_liquid(tile_pos.x, tile_pos.y+1,1.0)
-					liquidserver.remove_liquid(tile_pos.x, tile_pos.y,1.0)
-					liquidserver.remove_liquid(tile_pos.x, tile_pos.y-1,1.0)
-					liquidserver.remove_liquid(tile_pos.x+1, tile_pos.y+1,1.0)
-					liquidserver.remove_liquid(tile_pos.x, tile_pos.y,1.0)
-					liquidserver.remove_liquid(tile_pos.x-1, tile_pos.y-1,1.0)	
-					lavaserver.remove_liquid(tile_pos.x, tile_pos.y+1,1.0)
-					lavaserver.remove_liquid(tile_pos.x, tile_pos.y,1.0)
-					lavaserver.remove_liquid(tile_pos.x, tile_pos.y-1,1.0)
-					lavaserver.remove_liquid(tile_pos.x+1, tile_pos.y+1,1.0)
-					lavaserver.remove_liquid(tile_pos.x, tile_pos.y,1.0)
-					lavaserver.remove_liquid(tile_pos.x-1, tile_pos.y-1,1.0)
-					
-					#if w:
-						#w.cleanup_cell()
+		var tree_tile_pos = treestilemap.local_to_map(treestilemap.to_local(collision_point))
+		print("tree_tile_pos ", tree_tile_pos)
+		var tree_ac = treestilemap.get_cell_atlas_coords(tree_tile_pos)
+		if tree_ac in GameManager.TREE_CELLS:
+			treestilemap.erase_cell(tree_tile_pos)
+			lavaserver.remove_liquid(tree_tile_pos.x, tree_tile_pos.y, 1.0)
+
 		

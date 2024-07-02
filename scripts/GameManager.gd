@@ -19,6 +19,21 @@ const DEFAULT_LAVA_CELL = Vector2i(6,12)
 const DEFAULT_ROCK_CELL_SOURCE = 0
 const DEFAULT_ROCK_CELL = Vector2i(1,0)
 
+const TREE_CELLS = [
+	Vector2i(2,4),
+	Vector2i(3,4),
+	Vector2i(4,4),
+	Vector2i(2,5),
+	Vector2i(3,5),
+	Vector2i(4,5),
+	Vector2i(2,6),
+	Vector2i(3,6),
+	Vector2i(4,6),
+	Vector2i(3,7),
+	Vector2i(3,8),
+	Vector2i(2,8),
+]
+
 const WATER_CELLS = [
 	Vector2i(4,9),
 	Vector2i(4,10),
