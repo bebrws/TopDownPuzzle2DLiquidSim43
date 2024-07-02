@@ -1,5 +1,7 @@
 extends Node
 
+var dragging_star = false
+
 const max_water_for_level = [200.0]
 const max_laval_for_level = [200.0]
 
@@ -101,7 +103,8 @@ const GROUND_CELLS = [
 	#}
 #]
 
-
+func switch_scene(new_scene_path: String):
+	get_tree().change_scene_to_file(new_scene_path)
 
 func get_camera_screen_width_and_height():
 	var viewport = get_viewport()

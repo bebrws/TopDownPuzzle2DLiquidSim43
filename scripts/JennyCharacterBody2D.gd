@@ -36,7 +36,7 @@ var direction = 0
 
 
 func _unhandled_input(event):
-	if not Input.is_action_pressed("star_control"):
+	if not Input.is_action_pressed("star_control") and not GameManager.dragging_star:
 		if event is InputEventMouseButton:
 			if event.button_index == MOUSE_BUTTON_LEFT:
 				if event.is_double_click():

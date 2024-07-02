@@ -24,7 +24,7 @@ func _process(delta: float) -> void:
 
 func _on_body_entered(body: Node2D) -> void:
 	#if not ("miner" in body.get_groups()):
-	print("Water hit ", body)
+	#print("Water hit ", body)
 	if body is TileMapLayer:
 		#print("Collision wiht tilemap")		
 		var collshape: RectangleShape2D = $WaterCollisionShape2D.shape		
@@ -33,17 +33,17 @@ func _on_body_entered(body: Node2D) -> void:
 		#print("self.global_position ", self.global_position, "  collision_point ", collision_point)
 		var tile_pos = tilemap.local_to_map(tilemap.to_local(root.to_local(collision_point)))
 		var char_tile_pos = tilemap.local_to_map(tilemap.to_local(root.to_local(char.global_position)))
-		print("tile_pos ", tile_pos)
+		
 		var ac = tilemap.get_cell_atlas_coords(tile_pos)
-		print("Water hit ", ac)
+		
 		if char_tile_pos != tile_pos:
 			if true or ac == Vector2i(-1,-1):
 				var lam = lavaserver.get_liquid(tile_pos.x, tile_pos.y)
 				var wam = liquidserver.get_liquid(tile_pos.x, tile_pos.y)
-				print("lam ", lam)
+				
 				var w = liquidserver.get_cell_by_position(tile_pos.x, tile_pos.y)
 				var l = lavaserver.get_cell_by_position(tile_pos.x, tile_pos.y)
-				print("wam ", wam, "  lam  ", lam)
+				
 				#if w  and l and w.sprite != l.sprite:
 				if lam != 0.0:
 					print("converting ", tile_pos)

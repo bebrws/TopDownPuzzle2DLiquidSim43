@@ -447,7 +447,7 @@ position = Vector2(2.08165e-12, 2.08165e-12)
 scale = Vector2(0.45, 0.45)
 sprite_frames = SubResource("SpriteFrames_lgkm2")
 animation = &"sniffing"
-frame_progress = 0.735948
+frame_progress = 0.305116
 
 [node name="JennyCollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(-1.3125, 3.16373)

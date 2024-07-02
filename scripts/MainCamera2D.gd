@@ -2,7 +2,7 @@ extends Camera2D
 
 var target_node: Node2D
 
-var star_character: CharacterBody2D
+var star_character: Sprite2D
 var screen_width: float
 var screen_height: float
 
